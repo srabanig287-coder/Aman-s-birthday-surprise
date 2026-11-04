@@ -59,9 +59,27 @@ $('startButton').addEventListener('click', async () => {
   window.scrollTo({top:0,behavior:'smooth'}); await playMusic(); startSlideshow(); burstConfetti(100);
 });
 
-$('envelope').addEventListener('click', () => { $('envelope').classList.toggle('open'); $('envelopeHint').textContent = $('envelope').classList.contains('open') ? 'A little love, just for you ♡' : 'Tap the envelope to open your letter'; });
-$('envelope').addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){e.preventDefault();$('envelope').click();} });
+const envelope = $('#envelope');
+const envelopeHint = $('#envelopeHint');
 
+function openEnvelope() {
+  if (envelope.classList.contains('open')) return;
+
+  envelope.classList.add('open');
+
+  if (envelopeHint) {
+    envelopeHint.textContent = 'A little love, just for you ♡';
+  }
+}
+
+envelope.addEventListener('click', openEnvelope);
+
+envelope.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    openEnvelope();
+  }
+});
 document.querySelectorAll('.candle').forEach(candle => candle.addEventListener('click', () => {
   if (candle.classList.contains('out')) return;
   candle.classList.add('out'); candleCount++;
