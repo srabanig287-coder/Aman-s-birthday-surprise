@@ -1,124 +1,194 @@
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#210d1c" />
-  <meta name="description" content="A little birthday universe made just for you." />
-  <title>A Little Birthday Universe ✨</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#130e18">
+<title>A Little Birthday Universe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Great+Vibes&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="ambient" aria-hidden="true"></div>
-  <div class="petal-layer" id="petalLayer" aria-hidden="true"></div>
+<div class="ambient"></div>
+<div class="petal-layer" id="petalLayer"></div>
+<div class="confetti-layer" id="confettiLayer"></div>
 
-  <main>
-    <section id="lockScreen" class="screen lock-screen">
-      <div class="lock-card">
-        <div class="eyebrow"><span class="tiny-star">✦</span> A LITTLE SOMETHING FOR YOU <span class="tiny-star">✦</span></div>
-        <div class="moon-mark">☾</div>
-        <p class="script lock-script">A beautiful day is waiting...</p>
-        <h1>Some wishes<br><em>are worth waiting for.</em></h1>
-        <p class="lock-copy">A little world of memories, love and birthday magic is being saved just for you.</p>
-        <div class="countdown" aria-live="polite">
-          <div><strong id="days">00</strong><span>days</span></div>
-          <i>:</i><div><strong id="hours">00</strong><span>hours</span></div>
-          <i>:</i><div><strong id="minutes">00</strong><span>minutes</span></div>
-          <i>:</i><div><strong id="seconds">00</strong><span>seconds</span></div>
-        </div>
-        <div class="lock-line"><span class="lock-icon">♧</span><span id="lockStatus">This little surprise unlocks on 29 November</span></div>
-        <div class="gold-rule"><span>✧</span></div>
-        <p class="tiny-note">Made with love, just for you.</p>
-      </div>
-    </section>
+<main>
+<section id="lockScreen" class="screen lock-screen">
+<div class="lock-card">
+<p class="eyebrow">A LITTLE SOMETHING FOR YOU</p>
+<div class="moon-mark">☾</div>
+<p class="script">A beautiful day is waiting…</p>
+<h1>Some wishes<br><em>are worth waiting for.</em></h1>
+<p class="lock-copy">A little world of memories, love and birthday magic is being saved just for you.</p>
 
-    <section id="welcomeScreen" class="screen welcome-screen hidden">
-      <div class="welcome-content">
-        <p class="eyebrow">29 NOVEMBER · YOUR DAY</p>
-        <div class="welcome-orbit">✧</div>
-        <p class="script">The wait is over...</p>
-        <h1>Ready for<br><em>a little magic?</em></h1>
-        <p class="lock-copy">Take a breath, turn the sound on, and open your surprise.</p>
-        <button id="startButton" class="primary-button">Open your surprise <span>♡</span></button>
-      </div>
-    </section>
+<div class="countdown">
+<div><strong id="days">00</strong><span>Days</span></div>
+<i>:</i>
+<div><strong id="hours">00</strong><span>Hours</span></div>
+<i>:</i>
+<div><strong id="minutes">00</strong><span>Minutes</span></div>
+<i>:</i>
+<div><strong id="seconds">00</strong><span>Seconds</span></div>
+</div>
 
-    <section id="birthdayScreen" class="screen birthday-screen hidden">
-      <header class="topbar">
-        <span class="brand">a little universe <span>✦</span></span>
-        <button id="musicToggle" class="music-button" aria-label="Play music"><span id="musicIcon">♫</span><span id="musicLabel">Play music</span></button>
-      </header>
+<p class="lock-line"><span>✧</span><span id="lockStatus">This little surprise unlocks on 29 November.</span></p>
+<div class="gold-rule">✦</div>
+<p class="tiny-note">Made with love, just for you.</p>
+</div>
+</section>
 
-      <section class="hero section-pad" id="home">
-        <div class="hero-glow"></div>
-        <p class="eyebrow">TODAY IS ALL ABOUT YOU</p>
-        <p class="script hero-script">with all the love in the world</p>
-        <h1>Happy Birthday<span class="gold-dot">.</span></h1>
-        <p class="hero-sub">May life be gentle with your heart<br>and generous with your dreams.</p>
-        <button id="celebrateButton" class="outline-button">Make a wish <span>✧</span></button>
-        <div class="scroll-cue">SCROLL TO EXPLORE <span>↓</span></div>
-      </section>
+<section id="welcomeScreen" class="screen welcome-screen hidden">
+<div class="welcome-content">
+<p class="eyebrow">29 NOVEMBER · YOUR DAY</p>
+<div class="welcome-orbit">✧</div>
+<p class="script">The wait is over…</p>
+<h1>Ready for a<br><em>little magic?</em></h1>
+<p class="lock-copy">Take a breath, turn the sound on, and open your surprise.</p>
+<button id="startButton" class="primary-button">Open your surprise <span>♡</span></button>
+</div>
+</section>
 
-      <section class="letter-section section-pad">
-        <div class="section-heading"><p class="eyebrow">A NOTE FROM THE HEART</p><h2>Something I wanted<br><em>you to know</em></h2></div>
-        <div class="envelope-wrap">
-          <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open the birthday letter">
-            <div class="envelope-back"></div><div class="letter-paper"><span class="letter-top">A LITTLE LETTER</span><p class="script">To someone wonderful,</p><p>Some people make ordinary days feel a little brighter just by being in them. Today, I hope you feel even a fraction of the happiness and warmth you bring into the lives around you.</p><p>May this new chapter bring you good health, peaceful mornings, unexpected laughter, brave dreams and a thousand reasons to smile. Keep being wonderfully, unapologetically you.</p><p class="script signoff">With love, always ♡</p></div>
-            <div class="envelope-front"><div class="wax-seal">♡</div><span>OPEN ME</span></div>
-          </div>
-          <p class="tap-hint" id="envelopeHint">Tap the envelope to open your letter</p>
-        </div>
-      </section>
+<section id="birthdayScreen" class="birthday-screen hidden">
+<header class="topbar">
+<a class="brand" href="#home">a little universe <span>✦</span></a>
+<button id="musicToggle" class="music-button">
+<span id="musicIcon">♪</span>
+<span id="musicLabel">Play music</span>
+</button>
+</header>
 
-      <section class="cake-section section-pad">
-        <div class="section-heading"><p class="eyebrow">A WISH JUST FOR YOU</p><h2>Three little candles.<br><em>One big wish.</em></h2><p class="section-copy">Tap each flame to blow it out. Make your wish quietly.</p></div>
-        <div class="cake-scene">
-          <div class="candles">
-            <button class="candle" aria-label="Blow out candle one"><span class="flame"></span><span class="wick"></span><span class="stick"></span></button>
-            <button class="candle" aria-label="Blow out candle two"><span class="flame"></span><span class="wick"></span><span class="stick"></span></button>
-            <button class="candle" aria-label="Blow out candle three"><span class="flame"></span><span class="wick"></span><span class="stick"></span></button>
-          </div>
-          <div class="cake"><div class="icing"></div><div class="cake-side"></div><div class="cake-plate"></div></div>
-        </div>
-        <p id="wishMessage" class="wish-message">Three chances to wish for something beautiful.</p>
-      </section>
+<section id="home" class="hero section-pad">
+<div class="hero-glow"></div>
+<p class="eyebrow">TODAY IS ALL ABOUT YOU</p>
+<p class="script hero-script">With all the love in the world</p>
+<h1>Happy Birthday<span class="gold-dot">.</span></h1>
+<p class="hero-sub">May life be gentle with your heart<br>and generous with your dreams.</p>
+<button id="celebrateButton" class="outline-button">Make a wish <span>✧</span></button>
+<a class="scroll-cue" href="#letter">SCROLL TO EXPLORE <span>⌄</span></a>
+</section>
 
-      <section class="notes-section section-pad">
-        <div class="section-heading"><p class="eyebrow">LITTLE REMINDERS</p><h2>Three things<br><em>you should never forget</em></h2></div>
-        <div class="notes-grid">
-          <button class="secret-note"><span>01</span><b>✧</b><small>OPEN WHEN YOU NEED A SMILE</small><strong>You make the world a warmer place just by being in it.</strong></button>
-          <button class="secret-note"><span>02</span><b>♡</b><small>OPEN WHEN YOU DOUBT YOURSELF</small><strong>You are capable of more beautiful things than you know.</strong></button>
-          <button class="secret-note"><span>03</span><b>☾</b><small>OPEN BEFORE YOU SLEEP</small><strong>May tomorrow be kind to you, and may you always feel loved.</strong></button>
-        </div>
-        <p class="tap-hint">Tap each little note to reveal it</p>
-      </section>
+<section id="letter" class="letter-section section-pad">
+<div class="section-heading">
+<p class="eyebrow">A NOTE FROM THE HEART</p>
+<h2>Something I wanted<br><em>you to know</em></h2>
+</div>
 
-      <section class="memories-section section-pad">
-        <div class="section-heading"><p class="eyebrow">A FEW MOMENTS TO KEEP</p><h2>Little pieces of<br><em>your story</em></h2><p class="section-copy">Some moments deserve to be revisited.</p></div>
-        <div class="slideshow" id="slideshow">
-          <div class="slide-frame"><img id="slideImage" src="assets/photo1.jpg" alt="A birthday memory" /><div class="slide-vignette"></div><button id="fullscreenPhoto" class="expand-photo" aria-label="View photo full screen">⤢</button></div>
-          <div class="slide-meta"><span id="slideCount">01 / 06</span><p id="slideCaption">A moment worth keeping ♡</p></div>
-          <div class="progress-track" id="slideProgress"><span></span></div>
-        </div>
-      </section>
+<div class="envelope-wrap">
+<button id="envelope" class="envelope" type="button" aria-label="Open the birthday letter" aria-expanded="false">
+<span class="envelope-back"></span>
+<span class="letter-paper">
+<span class="letter-top">A LITTLE LETTER</span>
+<span class="letter-title">To someone wonderful,</span>
+<span class="letter-body">Some people make ordinary days feel a little brighter just by being in them. Today, I hope you feel even a fraction of the happiness and warmth you bring into the lives around you.<br><br>May this new chapter bring you good health, peaceful mornings, unexpected laughter, brave dreams and a thousand reasons to smile. Keep being wonderfully, unapologetically you.</span>
+<span class="signoff">With love, always ♡</span>
+</span>
+<span class="envelope-flap"></span>
+<span class="wax-seal">✦</span>
+<span class="envelope-front"><span>OPEN ME</span></span>
+</button>
+<p class="tap-hint" id="envelopeHint">Tap the envelope to open your letter</p>
+</div>
+</section>
 
-      <section class="gift-section section-pad">
-        <div class="section-heading"><p class="eyebrow">ONE LAST LITTLE SURPRISE</p><h2>Because you deserve<br><em>all the lovely things</em></h2></div>
-        <button id="giftBox" class="gift-box" aria-label="Open your birthday gift"><span class="gift-lid"></span><span class="gift-bow">♡</span><span class="gift-ribbon"></span><span class="gift-base"></span></button>
-        <p class="tap-hint" id="giftHint">Tap to open your gift</p>
-        <div id="finalMessage" class="final-message hidden"><p class="script">One wish, from me to you...</p><h2>May your life be as lovely<br>as the heart you carry.</h2><p>Happy birthday. Keep shining, keep growing, and never forget how special you are. ♡</p></div>
-      </section>
+<section class="cake-section section-pad">
+<div class="section-heading">
+<p class="eyebrow">A WISH JUST FOR YOU</p>
+<h2>Three little candles.<br><em>One big wish.</em></h2>
+<p class="section-copy">Tap each flame to blow it out, then make your wish.</p>
+</div>
 
-      <footer class="footer"><span>MADE WITH LOVE</span><div>✦　♡　✦</div><p>May this year be your sweetest one yet.</p></footer>
-    </section>
-  </main>
+<div class="cake-scene">
+<div class="candles">
+<button class="candle" aria-label="Blow out candle one"><span class="flame"></span><span class="wick"></span><span class="stick"></span></button>
+<button class="candle" aria-label="Blow out candle two"><span class="flame"></span><span class="wick"></span><span class="stick"></span></button>
+<button class="candle" aria-label="Blow out candle three"><span class="flame"></span><span class="wick"></span><span class="stick"></span></button>
+</div>
+<div class="cake">
+<div class="icing"></div>
+<div class="cake-side"></div>
+<div class="cake-plate"></div>
+</div>
+</div>
+<p id="wishMessage" class="wish-message">Three chances to wish for something beautiful.</p>
+</section>
 
-  <div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
-  <div id="photoModal" class="photo-modal hidden"><button id="closePhoto" aria-label="Close photo">×</button><img id="modalImage" alt="Expanded memory"></div>
-  <audio id="birthdayAudio" src="assets/music.mp3" preload="auto" loop></audio>
-  <script src="script.js"></script>
+<section class="notes-section section-pad">
+<div class="section-heading">
+<p class="eyebrow">LITTLE REMINDERS</p>
+<h2>Three things<br><em>you should never forget</em></h2>
+</div>
+
+<div class="notes-grid">
+<button class="secret-note"><span>01</span><b>♡</b><small>OPEN WHEN YOU NEED A SMILE</small><strong>You are cared for more than you know.</strong></button>
+<button class="secret-note"><span>02</span><b>✧</b><small>OPEN WHEN YOU DOUBT YOURSELF</small><strong>You are capable of beautiful things. Keep going.</strong></button>
+<button class="secret-note"><span>03</span><b>☾</b><small>OPEN BEFORE YOU SLEEP</small><strong>Tomorrow is another chance for something lovely.</strong></button>
+</div>
+<p class="tap-hint">Tap each little note to reveal it</p>
+</section>
+
+<section class="memories-section section-pad">
+<div class="section-heading">
+<p class="eyebrow">A FEW MOMENTS TO KEEP</p>
+<h2>Little pieces of<br><em>your story</em></h2>
+<p class="section-copy">A small collection of moments worth keeping close.</p>
+</div>
+
+<div class="slideshow">
+<div class="slide-frame">
+<img id="slideImage" src="assets/photo1.jpg" alt="A birthday memory">
+<div class="slide-vignette"></div>
+<button id="expandPhoto" class="expand-photo" aria-label="View photo larger">＋</button>
+</div>
+<div class="slide-meta">
+<span id="slideCount">01 / 06</span>
+<p id="slideCaption">A moment worth keeping ♡</p>
+</div>
+<div class="progress-track"><span id="slideProgress"></span></div>
+</div>
+</section>
+
+<section class="gift-section section-pad">
+<div class="section-heading">
+<p class="eyebrow">ONE LAST LITTLE SURPRISE</p>
+<h2>Because you deserve<br><em>all the lovely things</em></h2>
+<p class="section-copy">There is one more thing waiting for you.</p>
+</div>
+
+<button id="giftBox" class="gift-box" aria-label="Open your birthday gift">
+<span class="gift-bow">∞</span>
+<span class="gift-lid"></span>
+<span class="gift-base"></span>
+<span class="gift-ribbon"></span>
+</button>
+
+<p id="giftHint" class="tap-hint">Tap to open your gift</p>
+
+<div id="finalMessage" class="final-message hidden">
+<p class="script">A wish, from me to you…</p>
+<h2>May your year be beautiful.</h2>
+<p>May you find joy in little things, courage for the big things, and love in every season. Happy Birthday. ♡</p>
+<button id="replayButton" class="outline-button">Celebrate again <span>✧</span></button>
+</div>
+</section>
+
+<footer class="footer">
+<span>MADE WITH LOVE</span>
+<div>✧ ♡ ✧</div>
+<p>May this year be your sweetest one yet.</p>
+</footer>
+</section>
+</main>
+
+<div id="photoModal" class="photo-modal hidden" role="dialog" aria-modal="true">
+<button id="closePhoto" aria-label="Close photo">×</button>
+<img id="modalImage" src="" alt="Birthday memory enlarged">
+</div>
+
+<audio id="birthdayAudio" src="assets/music.mp3" preload="auto" loop></audio>
+<script src="script.js"></script>
 </body>
 </html>
