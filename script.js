@@ -1,109 +1,429 @@
-// PERSONALISE THESE LINES whenever you want to add names or custom messages.
-const BIRTHDAY_AT = new Date('2026-11-02T00:00:00+05:30');// midnight, India Standard Time
-const captions = [
-  'A moment worth keeping ♡',
-  'A little memory, a lot of love ✧',
-  'Some days stay with us forever',
-  'A smile that deserves its own celebration',
-  'Here is to all the lovely chapters ahead',
-  'And many more beautiful memories to come ♡'
-];
+
+/* =========================================
+   A LITTLE BIRTHDAY UNIVERSE
+   Birthday: 29 November 2026
+   ========================================= */
+
+// TEST MODE: true = unlock immediately for preview.
+// Before sharing the website, change this to false.
+const TEST_MODE = true;
+
+const TEST_UNLOCK_AT = new Date('2026-11-04T00:00:00+05:30');
+const REAL_BIRTHDAY_AT = new Date('2026-11-29T00:00:00+05:30');
 
 const $ = (id) => document.getElementById(id);
-const lockScreen = $('lockScreen'), welcomeScreen = $('welcomeScreen'), birthdayScreen = $('birthdayScreen');
-const audio = $('birthdayAudio');
-let audioStarted = false, slideshowTimer = null, currentSlide = 0, candleCount = 0;
 
-function unlockIfReady() {
-  const remaining = BIRTHDAY_AT.getTime() - Date.now();
-  if (remaining <= 0) {
-    lockScreen.classList.add('hidden');
-    welcomeScreen.classList.remove('hidden');
-    ['days','hours','minutes','seconds'].forEach(id => $(id).textContent = '00');
-    $('lockStatus').textContent = 'Your surprise is ready ♡';
+const lockScreen = $('lockScreen');
+const welcomeScreen = $('welcomeScreen');
+const birthdayScreen = $('birthdayScreen');
+const birthdayAudio = $('birthdayAudio');
+
+let countdownTimer = null;
+let slideshowTimer = null;
+let currentSlide = 0;
+let candlesBlown = 0;
+let musicPlaying = false;
+let giftOpened = false;
+let envelopeOpened = false;
+
+const photos = [
+  'assets/photo1.jpg',
+  'assets/photo2.jpg',
+  'assets/photo3.jpg',
+  'assets/photo4.jpg',
+  'assets/photo5.jpg',
+  'assets/photo6.jpg'
+];
+
+const captions = [
+  'A moment worth keeping ♡',
+  'A little memory, a lot of meaning.',
+  'Some moments stay forever.',
+  'A chapter full of possibilities.',
+  'Here is to all the beautiful days.',
+  'And many more memories to come ♡'
+];
+
+/* =========================================
+   COUNTDOWN AND UNLOCK
+   ========================================= */
+
+function updateCountdown() {
+  const now = new Date();
+  const difference = REAL_BIRTHDAY_AT - now;
+
+  if (difference <= 0) {
+    showWelcome();
     return;
   }
-  const days = Math.floor(remaining / 86400000);
-  const hours = Math.floor((remaining % 86400000) / 3600000);
-  const minutes = Math.floor((remaining % 3600000) / 60000);
-  const seconds = Math.floor((remaining % 60000) / 1000);
-  $('days').textContent = String(days).padStart(2,'0');
-  $('hours').textContent = String(hours).padStart(2,'0');
-  $('minutes').textContent = String(minutes).padStart(2,'0');
-  $('seconds').textContent = String(seconds).padStart(2,'0');
-}
-unlockIfReady();
-setInterval(unlockIfReady, 1000);
 
-function setMusicUI(playing, message='') {
-  $('musicIcon').textContent = playing ? 'Ⅱ' : '♫';
-  $('musicLabel').textContent = playing ? 'Pause music' : (message || 'Play music');
-  $('musicToggle').setAttribute('aria-label', playing ? 'Pause music' : 'Play music');
+  const days = Math.floor(difference / 86400000);
+  const hours = Math.floor((difference % 86400000) / 3600000);
+  const minutes = Math.floor((difference % 3600000) / 60000);
+  const seconds = Math.floor((difference % 60000) / 1000);
+
+  $('days').textContent = String(days).padStart(2, '0');
+  $('hours').textContent = String(hours).padStart(2, '0');
+  $('minutes').textContent = String(minutes).padStart(2, '0');
+  $('seconds').textContent = String(seconds).padStart(2, '0');
 }
-async function playMusic() {
-  try {
-    if (audio.readyState < 2) await new Promise((resolve,reject) => {
-      const done = () => { cleanup(); resolve(); };
-      const fail = () => { cleanup(); reject(new Error('Audio could not be loaded.')); };
-      const cleanup = () => { audio.removeEventListener('canplay',done); audio.removeEventListener('error',fail); };
-      audio.addEventListener('canplay',done,{once:true}); audio.addEventListener('error',fail,{once:true}); audio.load();
-    });
-    await audio.play(); audioStarted = true; setMusicUI(true);
-  } catch (err) { setMusicUI(false,'Tap to retry'); console.warn('Music playback:',err); }
+
+function showWelcome() {
+  clearInterval(countdownTimer);
+
+  lockScreen.classList.add('hidden');
+  welcomeScreen.classList.remove('hidden');
+  birthdayScreen.classList.add('hidden');
 }
-$('musicToggle').addEventListener('click', async () => { if (audio.paused) await playMusic(); else { audio.pause(); setMusicUI(false); } });
-audio.addEventListener('pause', () => { if (audioStarted) setMusicUI(false,'Play music'); });
-audio.addEventListener('playing', () => setMusicUI(true));
+
+function showBirthday() {
+  welcomeScreen.classList.add('hidden');
+  lockScreen.classList.add('hidden');
+  birthdayScreen.classList.remove('hidden');
+
+  startPetals();
+  startSlideshow();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function initializeWebsite() {
+  if (TEST_MODE || new Date() >= REAL_BIRTHDAY_AT) {
+    showWelcome();
+    return;
+  }
+
+  lockScreen.classList.remove('hidden');
+  welcomeScreen.classList.add('hidden');
+  birthdayScreen.classList.add('hidden');
+
+  updateCountdown();
+  countdownTimer = setInterval(updateCountdown, 1000);
+}
+
+initializeWebsite();
+
+/* =========================================
+   OPEN THE SURPRISE
+   ========================================= */
+
 $('startButton').addEventListener('click', async () => {
-  welcomeScreen.classList.add('hidden'); birthdayScreen.classList.remove('hidden');
-  window.scrollTo({top:0,behavior:'smooth'}); await playMusic(); startSlideshow(); burstConfetti(100);
+  showBirthday();
+
+  // Browsers allow audio playback after a user gesture.
+  try {
+    await birthdayAudio.play();
+    musicPlaying = true;
+    updateMusicButton();
+  } catch (error) {
+    musicPlaying = false;
+    updateMusicButton();
+  }
+
+  launchConfetti();
 });
 
-const envelope = $('#envelope');
-const envelopeHint = $('#envelopeHint');
+/* =========================================
+   MUSIC PLAY / PAUSE
+   ========================================= */
 
-function openEnvelope() {
-  if (envelope.classList.contains('open')) return;
+function updateMusicButton() {
+  $('musicIcon').textContent = musicPlaying ? 'Ⅱ' : '♪';
+  $('musicLabel').textContent = musicPlaying ? 'Pause music' : 'Play music';
+  $('musicToggle').setAttribute(
+    'aria-label',
+    musicPlaying ? 'Pause music' : 'Play music'
+  );
+}
 
+$('musicToggle').addEventListener('click', async () => {
+  if (musicPlaying) {
+    birthdayAudio.pause();
+    musicPlaying = false;
+  } else {
+    try {
+      await birthdayAudio.play();
+      musicPlaying = true;
+    } catch (error) {
+      musicPlaying = false;
+    }
+  }
+
+  updateMusicButton();
+});
+
+birthdayAudio.addEventListener('pause', () => {
+  musicPlaying = false;
+  updateMusicButton();
+});
+
+birthdayAudio.addEventListener('play', () => {
+  musicPlaying = true;
+  updateMusicButton();
+});
+
+/* =========================================
+   INTERACTIVE LETTER
+   ========================================= */
+
+$('envelope').addEventListener('click', () => {
+  const envelope = $('envelope');
+
+  if (envelopeOpened) return;
+
+  envelopeOpened = true;
   envelope.classList.add('open');
+  envelope.setAttribute('aria-expanded', 'true');
 
-  if (envelopeHint) {
-    envelopeHint.textContent = 'A little love, just for you ♡';
-  }
+  $('envelopeHint').textContent =
+    'A little note, written with love ♡';
+
+  launchConfetti(18);
+});
+
+/* =========================================
+   BLOW OUT THE CANDLES
+   ========================================= */
+
+document.querySelectorAll('.candle').forEach((candle) => {
+  candle.addEventListener('click', () => {
+    if (candle.classList.contains('blown')) return;
+
+    candle.classList.add('blown');
+    candlesBlown++;
+
+    const messages = [
+      'One wish has been set free. ✨',
+      'Two wishes are on their way. ♡',
+      'All three candles are out. Make your biggest wish! ✨'
+    ];
+
+    $('wishMessage').textContent = messages[candlesBlown - 1];
+
+    if (candlesBlown === 3) {
+      launchConfetti(45);
+    }
+  });
+});
+
+/* =========================================
+   SECRET NOTES
+   ========================================= */
+
+document.querySelectorAll('.secret-note').forEach((note) => {
+  note.addEventListener('click', () => {
+    note.classList.toggle('revealed');
+
+    const strong = note.querySelector('strong');
+
+    if (note.classList.contains('revealed')) {
+      note.dataset.originalText = strong.textContent;
+      note.querySelector('small').textContent = 'A LITTLE REMINDER FOR YOU ♡';
+      launchConfetti(8);
+    } else {
+      note.querySelector('small').textContent = [
+        'OPEN WHEN YOU NEED A SMILE',
+        'OPEN WHEN YOU DOUBT YOURSELF',
+        'OPEN BEFORE YOU SLEEP'
+      ][Array.from(note.parentElement.children).indexOf(note)];
+    }
+  });
+});
+
+/* =========================================
+   PHOTO SLIDESHOW
+   ========================================= */
+
+function showSlide(index) {
+  currentSlide = (index + photos.length) % photos.length;
+
+  const image = $('slideImage');
+  image.style.opacity = '0';
+
+  setTimeout(() => {
+    image.src = photos[currentSlide];
+
+    image.onload = () => {
+      image.style.opacity = '1';
+    };
+
+    image.onerror = () => {
+      image.style.opacity = '1';
+      image.alt = 'Photo unavailable. Check the assets folder.';
+    };
+
+    $('slideCount').textContent =
+      String(currentSlide + 1).padStart(2, '0') +
+      ' / ' +
+      String(photos.length).padStart(2, '0');
+
+    $('slideCaption').textContent = captions[currentSlide];
+    $('slideProgress').style.width =
+      ((currentSlide + 1) / photos.length) * 100 + '%';
+  }, 250);
 }
 
-envelope.addEventListener('click', openEnvelope);
+function startSlideshow() {
+  clearInterval(slideshowTimer);
 
-envelope.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter' || event.key === ' ') {
-    event.preventDefault();
-    openEnvelope();
+  showSlide(currentSlide);
+
+  slideshowTimer = setInterval(() => {
+    showSlide(currentSlide + 1);
+  }, 4500);
+}
+
+/* =========================================
+   ENLARGED PHOTO
+   ========================================= */
+
+$('expandPhoto').addEventListener('click', () => {
+  const image = $('slideImage');
+
+  $('modalImage').src = image.src;
+  $('photoModal').classList.remove('hidden');
+});
+
+function closePhotoModal() {
+  $('photoModal').classList.add('hidden');
+}
+
+$('closePhoto').addEventListener('click', closePhotoModal);
+
+$('photoModal').addEventListener('click', (event) => {
+  if (event.target === $('photoModal')) {
+    closePhotoModal();
   }
 });
-document.querySelectorAll('.candle').forEach(candle => candle.addEventListener('click', () => {
-  if (candle.classList.contains('out')) return;
-  candle.classList.add('out'); candleCount++;
-  $('wishMessage').textContent = candleCount < 3 ? `${3-candleCount} little ${3-candleCount===1?'flame':'flames'} left. Keep wishing ♡` : 'Wish sent into the universe. May it find its way to you ✨';
-  if (candleCount === 3) burstConfetti(65);
-}));
-document.querySelectorAll('.secret-note').forEach(note => note.addEventListener('click', () => note.classList.toggle('revealed')));
 
-const photos = ['assets/photo1.jpg','assets/photo2.jpg','assets/photo3.jpg','assets/photo4.jpg','assets/photo5.jpg','assets/photo6.jpg'];
-function showSlide(index) {
-  const img = $('slideImage'); img.classList.add('fade');
-  setTimeout(() => { img.src = photos[index]; img.onload = () => img.classList.remove('fade'); img.onerror = () => img.classList.remove('fade'); }, 450);
-  $('slideCount').textContent = `${String(index+1).padStart(2,'0')} / ${String(photos.length).padStart(2,'0')}`;
-  $('slideCaption').textContent = captions[index];
-  const bar = $('slideProgress').firstElementChild; bar.style.transition='none';bar.style.width='0%';requestAnimationFrame(()=>{bar.style.transition='width 5s linear';bar.style.width='100%';});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    closePhotoModal();
+  }
+});
+
+/* =========================================
+   GIFT BOX
+   ========================================= */
+
+$('giftBox').addEventListener('click', () => {
+  if (giftOpened) return;
+
+  giftOpened = true;
+
+  $('giftBox').classList.add('open');
+
+  $('giftHint').textContent = 'A little something, just for you ♡';
+
+  setTimeout(() => {
+    $('finalMessage').classList.remove('hidden');
+    launchConfetti(65);
+  }, 700);
+});
+
+/* =========================================
+   CELEBRATION BUTTON
+   ========================================= */
+
+$('celebrateButton').addEventListener('click', () => {
+  launchConfetti(65);
+  startPetals();
+});
+
+/* =========================================
+   CONFETTI EFFECT
+   ========================================= */
+
+function launchConfetti(amount = 35) {
+  const layer = $('confettiLayer');
+
+  for (let i = 0; i < amount; i++) {
+    const piece = document.createElement('span');
+
+    piece.className = 'confetti';
+    piece.style.left = Math.random() * 100 + 'vw';
+    piece.style.animationDuration = (3 + Math.random() * 3) + 's';
+    piece.style.animationDelay = Math.random() * 0.8 + 's';
+    piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+    layer.appendChild(piece);
+
+    setTimeout(() => piece.remove(), 7000);
+  }
 }
-function startSlideshow(){ if(slideshowTimer) clearInterval(slideshowTimer); showSlide(currentSlide); slideshowTimer=setInterval(()=>{currentSlide=(currentSlide+1)%photos.length;showSlide(currentSlide);},5000); }
-$('fullscreenPhoto').addEventListener('click',()=>{$('modalImage').src=photos[currentSlide];$('photoModal').classList.remove('hidden');});
-$('closePhoto').addEventListener('click',()=>$('photoModal').classList.add('hidden'));
-$('photoModal').addEventListener('click',e=>{if(e.target===$('photoModal'))$('photoModal').classList.add('hidden');});
 
-function burstConfetti(amount=70){const layer=$('confettiLayer');const colors=['#e9b8c8','#d9b879','#f8eee8','#bd7895','#a96b83'];for(let i=0;i<amount;i++){const piece=document.createElement('i');piece.className='confetti';piece.style.left=Math.random()*100+'%';piece.style.background=colors[Math.floor(Math.random()*colors.length)];piece.style.animationDelay=Math.random()*1.3+'s';piece.style.animationDuration=(2.5+Math.random()*2)+'s';piece.style.transform=`rotate(${Math.random()*180}deg)`;layer.appendChild(piece);setTimeout(()=>piece.remove(),5500);}}
-$('celebrateButton').addEventListener('click',()=>burstConfetti(110));
-$('giftBox').addEventListener('click',()=>{if($('giftBox').classList.contains('open'))return;$('giftBox').classList.add('open');$('giftHint').textContent='A wish, wrapped up just for you ♡';setTimeout(()=>$('finalMessage').classList.remove('hidden'),650);burstConfetti(90);});
+/* =========================================
+   FLOATING PETALS
+   ========================================= */
 
-// Soft floating petals, kept lightweight for phones.
-for(let i=0;i<14;i++){const p=document.createElement('span');p.className='petal';p.textContent=['✧','·','✦','❀'][i%4];p.style.left=Math.random()*100+'%';p.style.animationDuration=(14+Math.random()*18)+'s';p.style.animationDelay=(-Math.random()*20)+'s';p.style.fontSize=(9+Math.random()*12)+'px';$('petalLayer').appendChild(p);}
+let petalInterval = null;
+
+function startPetals() {
+  if (petalInterval) return;
+
+  const layer = $('petalLayer');
+  const symbols = ['✿', '❀', '✧', '♡'];
+
+  petalInterval = setInterval(() => {
+    const petal = document.createElement('span');
+
+    petal.className = 'petal';
+    petal.textContent = symbols[
+      Math.floor(Math.random() * symbols.length)
+    ];
+
+    petal.style.left = Math.random() * 100 + 'vw';
+    petal.style.fontSize = (12 + Math.random() * 13) + 'px';
+    petal.style.animationDuration = (7 + Math.random() * 7) + 's';
+
+    layer.appendChild(petal);
+
+    setTimeout(() => petal.remove(), 15000);
+  }, 700);
+}
+
+/* =========================================
+   REPLAY
+   ========================================= */
+
+$('replayButton').addEventListener('click', () => {
+  // Reset interactive elements.
+  envelopeOpened = false;
+  candlesBlown = 0;
+  giftOpened = false;
+  currentSlide = 0;
+
+  $('envelope').classList.remove('open');
+  $('envelope').setAttribute('aria-expanded', 'false');
+  $('envelopeHint').textContent = 'Tap the envelope to open your letter';
+
+  document.querySelectorAll('.candle').forEach((candle) => {
+    candle.classList.remove('blown');
+  });
+
+  $('wishMessage').textContent =
+    'Three chances to wish for something beautiful.';
+
+  $('giftBox').classList.remove('open');
+  $('giftHint').textContent = 'Tap to open your gift';
+  $('finalMessage').classList.add('hidden');
+
+  document.querySelectorAll('.secret-note').forEach((note, index) => {
+    note.classList.remove('revealed');
+
+    note.querySelector('small').textContent = [
+      'OPEN WHEN YOU NEED A SMILE',
+      'OPEN WHEN YOU DOUBT YOURSELF',
+      'OPEN BEFORE YOU SLEEP'
+    ][index];
+  });
+
+  showSlide(0);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  launchConfetti(55);
+});
+
+/* =========================================
+   INITIAL BUTTON STATE
+   ========================================= */
+
+updateMusicButton();
