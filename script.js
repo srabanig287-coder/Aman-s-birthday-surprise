@@ -1,5 +1,5 @@
 // PERSONALISE THESE LINES whenever you want to add names or custom messages.
-const BIRTHDAY_AT = new Date('2026-11-03T00:00:00+05:30');// midnight, India Standard Time
+const BIRTHDAY_AT = new Date('2026-11-02T00:00:00+05:30');// midnight, India Standard Time
 const captions = [
   'A moment worth keeping ♡',
   'A little memory, a lot of love ✧',
